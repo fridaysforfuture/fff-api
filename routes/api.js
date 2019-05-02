@@ -17,6 +17,7 @@ router.get('/scrape/list/all', function(req, res, next) {
 })
 
 router.get('/scrape/list/map', function(req, res, next) {
+  res.status(202)
   getLocations().then((list) => res.json({ generated: Date.now(), list }))
 })
 
