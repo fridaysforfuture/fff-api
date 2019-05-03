@@ -30,11 +30,11 @@ function sleep(ms){
 }
 async function getCityCoords(city, time, place) {
   let coords = {}
-  const cityDe = city.slice()
+  const friendlyName = city.slice().trim()
   city = deUmlaut(city)
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city}&format=json`)
     .then(data => {
-      coords = { city: cityDe, time, place, lat :data.data[0].lat, lon: data.data[0].lon }
+      coords = { city: friendlyName, time, place, lat :data.data[0].lat, lon: data.data[0].lon }
     }).catch(err => {
       console.error(err)
     })
@@ -86,7 +86,14 @@ module.exports = {
       markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
 `
     })
-    fs.writeFile(file,markers, err => {
+    fs.unlink(file, (err) => {
+      if (err) {
+        console.log("failed to delete mapdata: " + err)
+      } else {
+        console.log('successfully deleted mapdata')
+      }
+    })
+    fs.writeFile(file, markers, err => {
       if (err) return console.error(err)
       console.log('File successful saved!')
     })

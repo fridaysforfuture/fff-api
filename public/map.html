@@ -21,18 +21,17 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://fridaysforfuture.de/map/leaflet-gesture-handling.min.css" type="text/css">
-<script src="https://fridaysforfuture.de/map/leaflet-gesture-handling.min.js"></script>
+<link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
+<script src="//unpkg.com/leaflet-gesture-handling"></script>
 <script>
   var map = L.map('map', {
-    center: [51.5, 10],
+    center: [51.163361, 10.447683],
     zoom: 5,
     gestureHandling: true
   });
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
-
 </script>
 <script src="https://fff-api.dmho.de/mapdata.js"></script>
 
