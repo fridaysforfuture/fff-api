@@ -96,6 +96,5 @@ module.exports = {
 
 console.time()
 getLocations().then((data) => {
-  console.log(data)
   console.timeEnd()
 })
