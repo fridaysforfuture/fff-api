@@ -4,7 +4,8 @@
   "private": false,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www --ignore public/"
+    "dev": "nodemon ./bin/www --ignore public/",
+    "map": "node ./map.js"
   },
   "dependencies": {
     "@babel/register": "^7.4.4",

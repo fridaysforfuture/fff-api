@@ -42,6 +42,28 @@ async function getCityCoords(city, time, place) {
   return coords
 }
 
+async function getLocations () {
+  const list = await crunchList().then(data => {
+    return data
+  })
+  for (const item of list) {
+    const coords = await getCityCoords(item.city, item.time, item.place).then(res => {
+      if (res.city !== undefined) return res
+    })
+    locations.push(coords)
+  }
+  let markers = ''
+  locations.forEach(val => {
+    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
+`
+  })
+  fs.writeFile(file,markers, err => {
+    if (err) return console.error(err)
+    console.log('File successful saved!')
+  })
+  return locations
+}
+
 // console.time()
 // getCityCoords('Berlin').then(data => {
 //   console.log(data)
@@ -72,8 +94,8 @@ module.exports = {
   }
 }
 
-// console.time()
-// getLocations().then((data) => {
-//   console.log(data)
-//   console.timeEnd()
-// })
+console.time()
+getLocations().then((data) => {
+  console.log(data)
+  console.timeEnd()
+})
