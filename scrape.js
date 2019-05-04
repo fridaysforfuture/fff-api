@@ -29,7 +29,7 @@ module.exports = {
     let results = []
     result.forEach((value) => {
       let splitted = value.split(', ')
-      results.push({ city: splitted[0], time: splitted[1], place: splitted[2] })
+      if (splitted[1] !== undefined) results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
     })
     return results
   },
@@ -39,13 +39,29 @@ module.exports = {
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)
-          result = $('.wp-block-table').first().children().children().map(function (i, el) {return $(this).text()}).get() // TODO: fix first()
+          result = $('.wp-block-table').first().children().children().map(function (i, el) {return $(this).text()}).get()
         }
       }, (err) => console.log(err))
     let results = []
     result.forEach(value => {
       let splitted = value.split(', ')
-      results.push({ city: splitted[0], time: splitted[1], place: splitted[2] })
+      results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
+    })
+    return results
+  },
+  async crunchListSecond () {
+    await axios.get(url)
+      .then(response => {
+        if (response.status === 200) {
+          const html = response.data
+          const $ = cheerio.load(html)
+          result = $('.wp-block-table').eq(1).children().children().map(function (i, el) {return $(this).text()}).get()
+        }
+      }, err => console.log(err))
+    let results = []
+    result.forEach(value => {
+      let splitted = value.split(', ')
+      if (splitted[1] !== undefined) results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
     })
     return results
   }
@@ -53,21 +69,21 @@ module.exports = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function crunchList () {
-  await axios.get(url)
-    .then(response => {
-      if (response.status === 200) {
-        const html = response.data
-        const $ = cheerio.load(html)
-        result = $('.wp-block-table').first().children().children().map(function (i, el) {return $(this).text()}).get()
-      }
-    }, err => console.log(err))
-  let results = []
-  result.forEach(value => {
-    let splitted = value.split(', ')
-    results.push(`{ city: ${splitted[0]}, time: ${splitted[1]}, place: ${splitted[2]} }`)
-  })
-  return results
-}
+// async function crunchList () {
+//   await axios.get(url)
+//     .then(response => {
+//       if (response.status === 200) {
+//         const html = response.data
+//         const $ = cheerio.load(html)
+//         result = $('.wp-block-table').eq(1).children().children().map(function (i, el) {return $(this).text()}).get()
+//       }
+//     }, err => console.log(err))
+//   let results = []
+//   result.forEach(value => {
+//     let splitted = value.split(', ')
+//     if (splitted[1] !== undefined) results.push(`{ city: ${splitted[0]}, time: ${splitted[1]}, place: ${splitted[2]} }`)
+//   })
+//   return results
+// }
 
-//crunchList().then(data => console.log(data))
+// crunchList().then(data => console.log(data))

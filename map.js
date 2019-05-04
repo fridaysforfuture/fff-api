@@ -4,9 +4,10 @@ const fs = require('fs')
 axios.defaults.headers.common['charset'] = 'iso-8859-1'
 axios.defaults.headers.common["User-Agent"] = 'fff-api'
 
-const { crunchDate, crunchListAll, crunchList } = require('./scrape')
+const { crunchDate, crunchListAll, crunchList, crunchListSecond } = require('./scrape')
 
 const file = 'public/mapdata.js'
+const file2 = 'public/mapdata2.js'
 let locations = []
 
 function deUmlaut (value) {
@@ -57,9 +58,45 @@ async function getLocations () {
     markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
 `
   })
+  fs.unlink(file, (err) => {
+    if (err) {
+      console.log("failed to delete first mapdata: " + err)
+    } else {
+      console.log('successfully deleted first mapdata')
+    }
+  })
   fs.writeFile(file,markers, err => {
     if (err) return console.error(err)
-    console.log('File successful saved!')
+    console.log('First file successful saved!')
+  })
+  return locations
+}
+
+async function getLocationsSecond () {
+  const list = await crunchListSecond().then(data => {
+    return data
+  })
+  for (const item of list) {
+    const coords = await getCityCoords(item.city, item.time, item.place).then(res => {
+      if (res.city !== undefined) return res
+    })
+    locations.push(coords)
+  }
+  let markers = ''
+  locations.forEach(val => {
+    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
+`
+  })
+  fs.unlink(file2, (err) => {
+    if (err) {
+      console.log("failed to delete second mapdata: " + err)
+    } else {
+      console.log('successfully deleted second mapdata')
+    }
+  })
+  fs.writeFile(file2, markers, err => {
+    if (err) return console.error(err)
+    console.log('Second file successful saved!')
   })
   return locations
 }
@@ -88,20 +125,56 @@ module.exports = {
     })
     fs.unlink(file, (err) => {
       if (err) {
-        console.log("failed to delete mapdata: " + err)
+        console.log("failed to delete first mapdata: " + err)
       } else {
-        console.log('successfully deleted mapdata')
+        console.log('successfully deleted first mapdata')
       }
     })
     fs.writeFile(file, markers, err => {
       if (err) return console.error(err)
-      console.log('File successful saved!')
+      console.log('First file successful saved!')
+    })
+    return locations
+  },
+  async getLocationsSecond () {
+    const list = await crunchListSecond().then(data => {
+      return data
+    })
+    for (const item of list) {
+      const coords = await getCityCoords(item.city, item.time, item.place).then(res => {
+        if (res.city !== undefined) return res
+      })
+      locations.push(coords)
+    }
+    let markers = ''
+    locations.forEach(val => {
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
+`
+    })
+    fs.unlink(file2, (err) => {
+      if (err) {
+        console.log("failed to delete second mapdata: " + err)
+      } else {
+        console.log('successfully deleted second mapdata')
+      }
+    })
+    fs.writeFile(file2, markers, err => {
+      if (err) return console.error(err)
+      console.log('Second file successful saved!')
     })
     return locations
   }
 }
 
-console.time()
+console.time('loc1')
 getLocations().then((data) => {
-  console.timeEnd()
+  console.timeEnd('loc1')
 })
+
+setTimeout(() => { // prevent f4f server from blocking the request
+  console.time('loc2')
+  getLocationsSecond().then((data) => {
+    console.timeEnd('loc2')
+  })
+}, 500)
+
