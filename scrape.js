@@ -45,7 +45,7 @@ module.exports = {
     let results = []
     result.forEach(value => {
       let splitted = value.split(', ')
-      results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
+      if (splitted[1] !== undefined) results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
     })
     return results
   },

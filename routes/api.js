@@ -8,12 +8,12 @@ router.get('/scrape/date', function(req, res, next) {
   crunchDate().then((date) => res.json({ date }))
 })
 
-router.get('/scrape/list', function(req, res, next) {
-  crunchList().then((list) => res.json({ generated: Date.now(), list }))
-})
-
 router.get('/scrape/list/all', function(req, res, next) {
   crunchListAll().then((list) => res.json({ generated: Date.now(), list }))
+})
+
+router.get('/scrape/list', function(req, res, next) {
+  crunchList().then((list) => res.json({ generated: Date.now(), count: list.length, list }))
 })
 
 router.get('/scrape/list/map', function(req, res, next) {
@@ -23,7 +23,7 @@ router.get('/scrape/list/map', function(req, res, next) {
 })
 
 router.get('/scrape/list2', function(req, res, next) {
-  crunchListSecond().then((list) => res.json({ generated: Date.now(), list }))
+  crunchListSecond().then((list) => res.json({ generated: Date.now(), count: list.length, list }))
 })
 
 router.get('/scrape/list2/map', function(req, res, next) {

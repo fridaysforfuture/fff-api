@@ -58,6 +58,7 @@ async function getLocations () {
     markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
 `
   })
+  console.log('Total entries (1): ' + locations.length)
   fs.unlink(file, (err) => {
     if (err) {
       console.log("failed to delete first mapdata: " + err)
@@ -82,6 +83,7 @@ async function getLocationsSecond () {
     })
     locations.push(coords)
   }
+  console.log('Total entries (2): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
     markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
@@ -118,6 +120,7 @@ module.exports = {
       })
       locations.push(coords)
     }
+    console.log('Total entries (1): ' + locations.length)
     let markers = ''
     locations.forEach(val => {
       markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
@@ -146,6 +149,7 @@ module.exports = {
       })
       locations.push(coords)
     }
+    console.log('Total entries (2): ' + locations.length)
     let markers = ''
     locations.forEach(val => {
       markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
