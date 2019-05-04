@@ -39,7 +39,7 @@ module.exports = {
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)
-          result = $('.wp-block-table').first().children().children().map(function (i, el) {return $(this).text()}).get()
+          result = $('.wp-block-table').eq(0).children().children().map(function (i, el) {return $(this).text()}).get()
         }
       }, (err) => console.log(err))
     let results = []

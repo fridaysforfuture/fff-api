@@ -8,7 +8,6 @@ const { crunchDate, crunchListAll, crunchList, crunchListSecond } = require('./s
 
 const file = 'public/mapdata.js'
 const file2 = 'public/mapdata2.js'
-let locations = []
 
 function deUmlaut (value) {
   value = value.toLowerCase()
@@ -43,7 +42,8 @@ async function getCityCoords(city, time, place) {
   return coords
 }
 
-async function getLocations () {
+async function getLocations () { // generates the Leaflet data from the first list on the pages
+  let locations = []
   const list = await crunchList().then(data => {
     return data
   })
@@ -73,7 +73,8 @@ async function getLocations () {
   return locations
 }
 
-async function getLocationsSecond () {
+async function getLocationsSecond () { // generates the Leaflet data from the second list on the pages
+  let locations = []
   const list = await crunchListSecond().then(data => {
     return data
   })
@@ -110,7 +111,9 @@ async function getLocationsSecond () {
 // })
 
 module.exports = {
-  async getLocations () {
+
+  async getLocations () { // generates the Leaflet data from the first list on the pages
+    let locations = []
     const list = await crunchList().then(data => {
       return data
     })
@@ -139,7 +142,8 @@ module.exports = {
     })
     return locations
   },
-  async getLocationsSecond () {
+  async getLocationsSecond () { // generates the Leaflet data from the second list on the pages
+    let locations = []
     const list = await crunchListSecond().then(data => {
       return data
     })
@@ -169,6 +173,8 @@ module.exports = {
     return locations
   }
 }
+
+// execute the functions on "npm run map"
 
 console.time('loc1')
 getLocations().then((data) => {
