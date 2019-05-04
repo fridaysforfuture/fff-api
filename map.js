@@ -2,7 +2,7 @@
 const axios = require('axios')
 const fs = require('fs')
 axios.defaults.headers.common['charset'] = 'iso-8859-1'
-axios.defaults.headers.common["User-Agent"] = 'fff-api'
+axios.defaults.headers.common['User-Agent'] = 'fff-api'
 
 const { crunchDate, crunchListAll, crunchList, crunchListSecond } = require('./scrape')
 
@@ -24,18 +24,19 @@ function deUmlaut (value) {
   return value
 }
 
-function sleep(ms){
+function sleep (ms) {
   return new Promise(resolve => {
-    setTimeout(resolve,ms)
+    setTimeout(resolve, ms)
   })
 }
-async function getCityCoords(city, time, place) {
+
+async function getCityCoords (city, time, place) {
   let coords = {}
   const friendlyName = city.slice().trim()
   city = deUmlaut(city)
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city}&format=json`)
     .then(data => {
-      coords = { city: friendlyName, time, place, lat :data.data[0].lat, lon: data.data[0].lon }
+      coords = { city: friendlyName, time, place, lat: data.data[0].lat, lon: data.data[0].lon }
     }).catch(err => {
       console.error(err)
     })
@@ -62,12 +63,12 @@ async function getLocations () { // generates the Leaflet data from the first li
   console.log('Total entries (1): ' + locations.length)
   fs.unlink(file, (err) => {
     if (err) {
-      console.log("failed to delete first mapdata: " + err)
+      console.log('failed to delete first mapdata: ' + err)
     } else {
       console.log('successfully deleted first mapdata')
     }
   })
-  fs.writeFile(file,markers, err => {
+  fs.writeFile(file, markers, err => {
     if (err) return console.error(err)
     console.log('First file successful saved!')
   })
@@ -93,7 +94,7 @@ async function getLocationsSecond () { // generates the Leaflet data from the se
   })
   fs.unlink(file2, (err) => {
     if (err) {
-      console.log("failed to delete second mapdata: " + err)
+      console.log('failed to delete second mapdata: ' + err)
     } else {
       console.log('successfully deleted second mapdata')
     }
@@ -119,12 +120,12 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
   console.log('Total entries (textgen): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br><button class="btn btn-outline-primary">Ort w&auml;hlen</button>');
+    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" onclick="selectPlace();" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
 `
   })
   fs.unlink(file_textgen, (err) => {
     if (err) {
-      console.log("failed to delete textgen mapdata: " + err)
+      console.log('failed to delete textgen mapdata: ' + err)
     } else {
       console.log('successfully deleted textgen mapdata')
     }
@@ -163,7 +164,7 @@ module.exports = {
     })
     fs.unlink(file, (err) => {
       if (err) {
-        console.log("failed to delete first mapdata: " + err)
+        console.log('failed to delete first mapdata: ' + err)
       } else {
         console.log('successfully deleted first mapdata')
       }
@@ -193,7 +194,7 @@ module.exports = {
     })
     fs.unlink(file2, (err) => {
       if (err) {
-        console.log("failed to delete second mapdata: " + err)
+        console.log('failed to delete second mapdata: ' + err)
       } else {
         console.log('successfully deleted second mapdata')
       }
