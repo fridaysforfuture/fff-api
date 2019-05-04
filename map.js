@@ -120,7 +120,7 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
   console.log('Total entries (textgen): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" onclick="selectPlace();" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
+    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
 `
   })
   fs.unlink(file_textgen, (err) => {
