@@ -1,4 +1,4 @@
-# FridaysForFuture API
+# Fridays For Future API
 
 ## Usage:
 
