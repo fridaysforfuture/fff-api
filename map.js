@@ -34,7 +34,8 @@ async function getCityCoords (city, time, place) {
   let coords = {}
   const friendlyName = city.slice().trim()
   city = deUmlaut(city)
-  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city}&format=json`)
+  console.log(city)
+  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json`)
     .then(data => {
       coords = { city: friendlyName, time, place, lat: data.data[0].lat, lon: data.data[0].lon }
     }).catch(err => {
