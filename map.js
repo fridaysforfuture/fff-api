@@ -34,10 +34,22 @@ async function getCityCoords (city, time, place) {
   let coords = {}
   const friendlyName = city.slice().trim()
   city = deUmlaut(city)
-  console.log(city)
-  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json`)
+  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json&addressdetails=1`)
     .then(data => {
-      coords = { city: friendlyName, time, place, lat: data.data[0].lat, lon: data.data[0].lon }
+      let state
+      if (city !== 'berlin' && city !== 'bremen' && city !== 'hamburg') {
+        state = data.data[0].address.state
+      } else {
+        state = friendlyName
+      }
+      coords = {
+        city: friendlyName,
+        time,
+        place,
+        lat: data.data[0].lat,
+        lon: data.data[0].lon,
+        state
+      }
     }).catch(err => {
       console.error(err)
     })
@@ -58,7 +70,7 @@ async function getLocations () { // generates the Leaflet data from the first li
   }
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
+    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
   })
   console.log('Total entries (1): ' + locations.length)
@@ -90,7 +102,7 @@ async function getLocationsSecond () { // generates the Leaflet data from the se
   console.log('Total entries (2): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
+    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
   })
   fs.unlink(file2, (err) => {
@@ -121,7 +133,7 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
   console.log('Total entries (textgen): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
+    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br><br>${val.state}<button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" data-state="${val.state}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
 `
   })
   fs.unlink(file_textgen, (err) => {
@@ -160,7 +172,7 @@ module.exports = {
     console.log('Total entries (1): ' + locations.length)
     let markers = ''
     locations.forEach(val => {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
     })
     fs.unlink(file, (err) => {
@@ -190,7 +202,7 @@ module.exports = {
     console.log('Total entries (2): ' + locations.length)
     let markers = ''
     locations.forEach(val => {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}');
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
     })
     fs.unlink(file2, (err) => {
