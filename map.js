@@ -79,7 +79,7 @@ async function getLocations () { // generates the Leaflet data from the first li
       markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
     }
-  }).catch(err => console.error(err))
+  })
   console.log('Total entries (1): ' + locations.length)
   fs.unlink(file, (err) => {
     if (err) {
