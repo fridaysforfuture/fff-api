@@ -3,7 +3,6 @@ const router = express.Router()
 const { crunchDate, crunchListAll, crunchList, crunchListSecond, crunchRegioList } = require('../scrape')
 const { getLocations, getLocationsSecond, getLocationsGroups } = require('../map')
 
-
 router.get('/scrape/date', function(req, res, next) {
   crunchDate().then((date) => res.json({ date }))
 })

@@ -2,13 +2,13 @@
 const axios = require('axios')
 const fs = require('fs')
 axios.defaults.headers.common['charset'] = 'iso-8859-1'
-axios.defaults.headers.common['User-Agent'] = 'Fridays for Future API v0.0.1'
+axios.defaults.headers.common['User_Agent'] = 'Fridays for Future API v0.0.1'
 
 const { crunchDate, crunchListAll, crunchList, crunchListSecond, crunchRegioList } = require('./scrape')
 
-module.exports.getLocations = getLocations()
-module.exports.getLocationsSecond = getLocationsSecond()
-module.exports.getLocationsGroups = getLocationsGroups()
+exports = {
+  getLocationsGroups, getLocations, getLocationsSecond, getLocationsTextgen
+}
 
 const file = 'public/mapdata.js'
 const file2 = 'public/mapdata2.js'
@@ -39,7 +39,7 @@ async function getCityCoords (city, time, place) {
   let coords = {}
   const friendlyName = city.slice().trim()
   city = deUmlaut(city)
-  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json&addressdetails=1`)
+  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
         let state
@@ -70,7 +70,7 @@ async function getGroupCoords (groupName) {
   let coords = {}
   const friendlyName = groupName.slice().trim()
   groupName = deUmlaut(groupName)
-  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&email=karl@karl-beecken.de&format=json&addressdetails=1`)
+  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&email=karl@karl-beecken.de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
         let state
