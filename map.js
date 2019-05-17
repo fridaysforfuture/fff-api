@@ -4,7 +4,7 @@ const fs = require('fs')
 axios.defaults.headers.common['charset'] = 'iso-8859-1'
 axios.defaults.headers.common['User-Agent'] = 'Fridays for Future API v0.0.1'
 
-const { crunchDate, crunchListAll, crunchList, crunchListSecond } = require('./scrape')
+const { crunchDate, crunchListAll, crunchList, crunchListSecond, crunchRegioList } = require('./scrape')
 
 module.exports.getLocations = getLocations()
 module.exports.getLocationsSecond = getLocationsSecond()
@@ -12,6 +12,7 @@ module.exports.getLocationsSecond = getLocationsSecond()
 const file = 'public/mapdata.js'
 const file2 = 'public/mapdata2.js'
 const file_textgen = 'public/mapdata_textgen.js'
+const file_groups = 'public/mapdata_groups.js'
 
 function deUmlaut (value) {
   value = value.toLowerCase()
@@ -55,12 +56,42 @@ async function getCityCoords (city, time, place) {
           state
         }
       }
-    }).catch(err => {
+    }).catch(async err => {
       console.error(err)
+      await sleep(1000)
     })
-  await sleep(900)
+  await sleep(1000)
   return coords
 }
+
+async function getGroupCoords (group) {
+  let coords = {}
+  const friendlyName = group.slice().trim()
+  group = deUmlaut(group)
+  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&email=karl@karl-beecken.de&format=json&addressdetails=1`)
+    .then(data => {
+      if (data.data[0]) {
+        let state
+        if (group !== 'berlin' && group !== 'bremen' && group !== 'hamburg') {
+          state = data.data[0].address.state
+        } else {
+          state = friendlyName
+        }
+        coords = {
+          group: friendlyName,
+          lat: data.data[0].lat,
+          lon: data.data[0].lon,
+          state
+        }
+      }
+    }).catch(async err => {
+      console.error(err)
+      await sleep(1000)
+    })
+  await sleep(1000)
+  return coords
+}
+
 
 async function getLocations () { // generates the Leaflet data from the first list on the pages
   let locations = []
@@ -161,6 +192,39 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
   return locations
 }
 
+async function getLocationsGroups () { // generates the Leaflet data from the second list on the pages
+  let locations = []
+  const list = await crunchRegioList().then(data => {
+    return data
+  })
+  for (const item of list) {
+    const coords = await getGroupCoords(item.group).then(res => {
+      if (res.group !== undefined) return res
+    })
+    locations.push(coords)
+  }
+  console.log('Total entries (groups): ' + locations.length)
+  let markers = ''
+  locations.forEach(val => {
+    if (val !== undefined) {
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.group}</b><br>${val.state}');
+`
+    }
+  })
+  fs.unlink(file_groups, (err) => {
+    if (err) {
+      console.log('failed to delete groups mapdata: ' + err)
+    } else {
+      console.log('successfully deleted groups mapdata')
+    }
+  })
+  fs.writeFile(file_groups, markers, err => {
+    if (err) return console.error(err)
+    console.log('Groups file successful saved!')
+  })
+  return locations
+}
+
 // console.time()
 // getCityCoords('Berlin').then(data => {
 //   console.log(data)
@@ -180,23 +244,14 @@ getLocations().then((data) => { // stack to prevent nominatim server from blocki
         console.time('loc_textgen')
         getLocationsTextgen().then((data) => {
           console.timeEnd('loc_textgen')
+          setTimeout(() => { // prevent f4f server from blocking the request
+          console.time('loc_groups')
+          getLocationsGroups().then((data) => {
+            console.timeEnd('loc_groups')
+          })
+        }, 500)
         })
       }, 500)
     })
-  }, 250)
+  }, 500)
 })
-
-setTimeout(() => { // prevent f4f server from blocking the request
-  console.time('loc2')
-  getLocationsSecond().then((data) => {
-    console.timeEnd('loc2')
-  })
-}, 250)
-
-setTimeout(() => { // prevent f4f server from blocking the request
-  console.time('loc_textgen')
-  getLocationsTextgen().then((data) => {
-    console.timeEnd('loc_textgen')
-  })
-}, 500)
-
