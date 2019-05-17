@@ -92,7 +92,6 @@ async function getGroupCoords (group) {
   return coords
 }
 
-
 async function getLocations () { // generates the Leaflet data from the first list on the pages
   let locations = []
   const list = await crunchList().then(data => {
@@ -198,10 +197,12 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
     return data
   })
   for (const item of list) {
-    const coords = await getGroupCoords(item.group).then(res => {
-      if (res.group !== undefined) return res
-    })
-    locations.push(coords)
+    if (item !== undefined) {
+      const coords = await getGroupCoords(item.group).then(res => {
+        if (res.group !== undefined) return res
+      })
+      locations.push(coords)
+    }
   }
   console.log('Total entries (groups): ' + locations.length)
   let markers = ''
@@ -245,11 +246,11 @@ getLocations().then((data) => { // stack to prevent nominatim server from blocki
         getLocationsTextgen().then((data) => {
           console.timeEnd('loc_textgen')
           setTimeout(() => { // prevent f4f server from blocking the request
-          console.time('loc_groups')
-          getLocationsGroups().then((data) => {
-            console.timeEnd('loc_groups')
-          })
-        }, 500)
+            console.time('loc_groups')
+            getLocationsGroups().then((data) => {
+              console.timeEnd('loc_groups')
+            })
+          }, 500)
         })
       }, 500)
     })
