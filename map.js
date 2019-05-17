@@ -66,11 +66,10 @@ async function getCityCoords (city, time, place) {
 }
 
 async function getGroupCoords (groupName) {
-  console.log(groupName)
   let coords = {}
   const friendlyName = groupName.slice().trim()
   groupName = deUmlaut(groupName)
-  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&email=karl@karl-beecken.de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
+  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${groupName} de&email=karl@karl-beecken.de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
         let state
@@ -80,7 +79,7 @@ async function getGroupCoords (groupName) {
           state = friendlyName
         }
         coords = {
-          group: friendlyName,
+          groupName: friendlyName,
           lat: data.data[0].lat,
           lon: data.data[0].lon,
           state

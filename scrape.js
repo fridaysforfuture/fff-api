@@ -78,7 +78,7 @@ module.exports = {
     let results = []
     result.forEach(value => {
       let splitted = value.split(': ')
-      if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(`{ group: ${splitted[0]} }`)
+      if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(JSON.parse(`{ "groupName": "${splitted[0]}" }`))
     })
     return results
   }
