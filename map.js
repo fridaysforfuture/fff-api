@@ -75,8 +75,10 @@ async function getLocations () { // generates the Leaflet data from the first li
   }
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
+    if (val.lat) {
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
+    }
   }).catch(err => console.error(err))
   console.log('Total entries (1): ' + locations.length)
   fs.unlink(file, (err) => {
@@ -107,8 +109,10 @@ async function getLocationsSecond () { // generates the Leaflet data from the se
   console.log('Total entries (2): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
+    if (val.lat) {
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
+    }
   })
   fs.unlink(file2, (err) => {
     if (err) {
@@ -138,8 +142,10 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
   console.log('Total entries (textgen): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" data-state="${val.state}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
+    if (val.lat) {
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" data-state="${val.state}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
 `
+    }
   })
   fs.unlink(file_textgen, (err) => {
     if (err) {
