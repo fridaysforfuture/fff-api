@@ -8,6 +8,7 @@ const { crunchDate, crunchListAll, crunchList, crunchListSecond, crunchRegioList
 
 module.exports.getLocations = getLocations()
 module.exports.getLocationsSecond = getLocationsSecond()
+module.exports.getLocationsGroups = getLocationsGroups()
 
 const file = 'public/mapdata.js'
 const file2 = 'public/mapdata2.js'
@@ -64,15 +65,16 @@ async function getCityCoords (city, time, place) {
   return coords
 }
 
-async function getGroupCoords (group) {
+async function getGroupCoords (groupName) {
+  console.log(groupName)
   let coords = {}
-  const friendlyName = group.slice().trim()
-  group = deUmlaut(group)
+  const friendlyName = groupName.slice().trim()
+  groupName = deUmlaut(groupName)
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&email=karl@karl-beecken.de&format=json&addressdetails=1`)
     .then(data => {
       if (data.data[0]) {
         let state
-        if (group !== 'berlin' && group !== 'bremen' && group !== 'hamburg') {
+        if (groupName !== 'berlin' && groupName !== 'bremen' && groupName !== 'hamburg') {
           state = data.data[0].address.state
         } else {
           state = friendlyName
@@ -197,9 +199,9 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
     return data
   })
   for (const item of list) {
-    if (item !== undefined) {
-      const coords = await getGroupCoords(item.group).then(res => {
-        if (res.group !== undefined) return res
+    if (item.groupName !== undefined) {
+      const coords = await getGroupCoords(item.groupName).then(res => {
+        if (res.groupName !== undefined) return res
       })
       locations.push(coords)
     }
@@ -208,7 +210,7 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
   let markers = ''
   locations.forEach(val => {
     if (val !== undefined) {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.group}</b><br>${val.state}');
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.groupName}</b><br>${val.state}');
 `
     }
   })
