@@ -75,7 +75,7 @@ async function getLocations () { // generates the Leaflet data from the first li
   }
   let markers = ''
   locations.forEach(val => {
-    if (val.lat) {
+    if (val !== undefined) {
       markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
     }
@@ -109,7 +109,7 @@ async function getLocationsSecond () { // generates the Leaflet data from the se
   console.log('Total entries (2): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    if (val.lat) {
+    if (val !== undefined) {
       markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
     }
@@ -142,7 +142,7 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
   console.log('Total entries (textgen): ' + locations.length)
   let markers = ''
   locations.forEach(val => {
-    if (val.lat) {
+    if (val !== undefined) {
       markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" data-state="${val.state}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
 `
     }
