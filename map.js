@@ -2,9 +2,12 @@
 const axios = require('axios')
 const fs = require('fs')
 axios.defaults.headers.common['charset'] = 'iso-8859-1'
-axios.defaults.headers.common['User-Agent'] = 'fff-api'
+axios.defaults.headers.common['User-Agent'] = 'Fridays for Future API v0.0.1'
 
 const { crunchDate, crunchListAll, crunchList, crunchListSecond } = require('./scrape')
+
+module.exports.getLocations = getLocations()
+module.exports.getLocationsSecond = getLocationsSecond()
 
 const file = 'public/mapdata.js'
 const file2 = 'public/mapdata2.js'
@@ -36,19 +39,21 @@ async function getCityCoords (city, time, place) {
   city = deUmlaut(city)
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json&addressdetails=1`)
     .then(data => {
-      let state
-      if (city !== 'berlin' && city !== 'bremen' && city !== 'hamburg') {
-        state = data.data[0].address.state
-      } else {
-        state = friendlyName
-      }
-      coords = {
-        city: friendlyName,
-        time,
-        place,
-        lat: data.data[0].lat,
-        lon: data.data[0].lon,
-        state
+      if (data.data[0]) {
+        let state
+        if (city !== 'berlin' && city !== 'bremen' && city !== 'hamburg') {
+          state = data.data[0].address.state
+        } else {
+          state = friendlyName
+        }
+        coords = {
+          city: friendlyName,
+          time,
+          place,
+          lat: data.data[0].lat,
+          lon: data.data[0].lon,
+          state
+        }
       }
     }).catch(err => {
       console.error(err)
@@ -72,7 +77,7 @@ async function getLocations () { // generates the Leaflet data from the first li
   locations.forEach(val => {
     markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
 `
-  })
+  }).catch(err => console.error(err))
   console.log('Total entries (1): ' + locations.length)
   fs.unlink(file, (err) => {
     if (err) {
@@ -156,75 +161,23 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
 //   console.timeEnd()
 // })
 
-module.exports = {
-
-  async getLocations () { // generates the Leaflet data from the first list on the pages
-    let locations = []
-    const list = await crunchList().then(data => {
-      return data
-    })
-    for (const item of list) {
-      const coords = await getCityCoords(item.city, item.time, item.place).then(res => {
-        if (res.city !== undefined) return res
-      })
-      locations.push(coords)
-    }
-    console.log('Total entries (1): ' + locations.length)
-    let markers = ''
-    locations.forEach(val => {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
-`
-    })
-    fs.unlink(file, (err) => {
-      if (err) {
-        console.log('failed to delete first mapdata: ' + err)
-      } else {
-        console.log('successfully deleted first mapdata')
-      }
-    })
-    fs.writeFile(file, markers, err => {
-      if (err) return console.error(err)
-      console.log('First file successful saved!')
-    })
-    return locations
-  },
-  async getLocationsSecond () { // generates the Leaflet data from the second list on the pages
-    let locations = []
-    const list = await crunchListSecond().then(data => {
-      return data
-    })
-    for (const item of list) {
-      const coords = await getCityCoords(item.city, item.time, item.place).then(res => {
-        if (res.city !== undefined) return res
-      })
-      locations.push(coords)
-    }
-    console.log('Total entries (2): ' + locations.length)
-    let markers = ''
-    locations.forEach(val => {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state}');
-`
-    })
-    fs.unlink(file2, (err) => {
-      if (err) {
-        console.log('failed to delete second mapdata: ' + err)
-      } else {
-        console.log('successfully deleted second mapdata')
-      }
-    })
-    fs.writeFile(file2, markers, err => {
-      if (err) return console.error(err)
-      console.log('Second file successful saved!')
-    })
-    return locations
-  }
-}
-
 // execute the functions on "npm run map"
 
 console.time('loc1')
-getLocations().then((data) => {
+getLocations().then((data) => { // stack to prevent nominatim server from blocking
   console.timeEnd('loc1')
+  setTimeout(() => { // prevent f4f server from blocking the request
+    console.time('loc2')
+    getLocationsSecond().then((data) => {
+      console.timeEnd('loc2')
+      setTimeout(() => { // prevent f4f server from blocking the request
+        console.time('loc_textgen')
+        getLocationsTextgen().then((data) => {
+          console.timeEnd('loc_textgen')
+        })
+      }, 500)
+    })
+  }, 250)
 })
 
 setTimeout(() => { // prevent f4f server from blocking the request

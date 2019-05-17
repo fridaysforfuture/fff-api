@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { crunchDate, crunchListAll, crunchList, crunchListSecond } = require('../scrape')
+const { crunchDate, crunchListAll, crunchList, crunchListSecond, crunchRegioList } = require('../scrape')
 const { getLocations, getLocationsSecond } = require('../map')
 
 
@@ -30,6 +30,10 @@ router.get('/scrape/list2/map', function(req, res, next) {
   getLocationsSecond()
   res.status(202)
   res.json({ queued: true, file: 'mapdata2.js' })
+})
+
+router.get('/scrape/groups', function(req, res, next) {
+  crunchRegioList().then((list) => res.json({ generated: Date.now(), count: list.length, list }))
 })
 
 module.exports = router;

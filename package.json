@@ -8,8 +8,6 @@
     "map": "node ./map.js"
   },
   "dependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/register": "^7.4.4",
     "axios": "^0.18.0",
     "babel": "^6.23.0",
     "cheerio": "^1.0.0-rc.3",
