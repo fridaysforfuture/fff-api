@@ -249,17 +249,17 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
 
 // execute the functions on "npm run map"
 
-console.time('loc1')
-getLocations().then((data) => { // stack to prevent nominatim server from blocking
-  console.timeEnd('loc1')
+console.time('loc_textgen')
+getLocationsTextgen().then((data) => { // stack to prevent nominatim server from blocking
+  console.timeEnd('loc_textgen')
   setTimeout(() => { // prevent f4f server from blocking the request
     console.time('loc2')
     getLocationsSecond().then((data) => {
       console.timeEnd('loc2')
       setTimeout(() => { // prevent f4f server from blocking the request
-        console.time('loc_textgen')
-        getLocationsTextgen().then((data) => {
-          console.timeEnd('loc_textgen')
+        console.time('loc1')
+        getLocations().then((data) => {
+          console.timeEnd('loc1')
           setTimeout(() => { // prevent f4f server from blocking the request
             console.time('loc_groups')
             getLocationsGroups().then((data) => {
