@@ -65,7 +65,7 @@ async function getCityCoords (city, time, place) {
   return coords
 }
 
-async function getGroupCoords (groupName) {
+async function getGroupCoords (groupName, groupLinks) {
   let coords = {}
   const friendlyName = groupName.slice().trim()
   groupName = deUmlaut(groupName)
@@ -82,7 +82,8 @@ async function getGroupCoords (groupName) {
           groupName: friendlyName,
           lat: data.data[0].lat,
           lon: data.data[0].lon,
-          state
+          state,
+          groupLinks
         }
       }
     }).catch(async err => {
@@ -199,7 +200,7 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
   })
   for (const item of list) {
     if (item.groupName !== undefined) {
-      const coords = await getGroupCoords(item.groupName).then(res => {
+      const coords = await getGroupCoords(item.groupName, item.groupLinks).then(res => {
         if (res.groupName !== undefined) return res
       })
       locations.push(coords)
@@ -207,9 +208,22 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
   }
   console.log('Total entries (groups): ' + locations.length)
   let markers = ''
+  let groupString
   locations.forEach(val => {
     if (val !== undefined) {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.groupName}</b><br>${val.state}');
+      groupString = '<div style="text-align: center">'
+      val.groupLinks.forEach(links => {
+        switch (links.type) {
+          case 'whatsapp':
+            groupString += `<a href="${links.link}"><img src="images/whatsapp.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            break
+          case 'telegram':
+            groupString += `<a href="${links.link}"><img src="images/telegram.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            break
+        }
+      })
+      groupString += '</div>'
+      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.groupName}</b><br>${val.state}<br>${groupString}');
 `
     }
   })

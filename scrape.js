@@ -1,5 +1,8 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
+const jsdom = require("jsdom")
+const { JSDOM } = jsdom
+const util = require('util')
 let result
 
 const url = 'https://fridaysforfuture.de/streiktermine/'
@@ -66,19 +69,38 @@ module.exports = {
     })
     return results
   },
-  async crunchRegioList () {
+  crunchRegioList: async function () {
     await axios.get(regioUrl)
       .then(response => {
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)
-          result = $('div .su-accordion').eq(0).children('div .su-spoiler').children('div .su-spoiler-content').children('ul').children('li').map(function (i, el) {return $(this).text()}).get()
+          result = $('div .su-accordion').eq(0).children('div .su-spoiler').children('div .su-spoiler-content').children('ul').children('li').map(function (i, el) {return $(this).html()}).get()
         }
       }, err => console.log(err))
     let results = []
     result.forEach(value => {
       let splitted = value.split(': ')
-      if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(JSON.parse(`{ "groupName": "${splitted[0]}" }`))
+      let linksArray = []
+      const dom = new JSDOM(
+        '<!doctype html><body>' + splitted[0],
+        'text/html')
+      const groupName = dom.window.document.body.textContent
+      let links = splitted[1].split(' | ')
+      links.forEach(value => {
+        const domLinks = new JSDOM(
+          '<!doctype html><body>' + value,
+          'text/html')
+        let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
+        const chatType = domLinks.window.document.body.querySelector('a').textContent === 'WhatsApp' ? 'whatsapp' : domLinks.window.document.body.querySelector('a').textContent === 'Telegram' ? 'telegram' : undefined
+        chatLink = chatLink.replace(/\r?\n|\r/, '')
+        if (chatType !== undefined) {
+          linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
+        }
+      })
+      const jsonString = `{ "groupName": "${groupName}", "groupLinks": ${JSON.stringify(linksArray)} }`
+      const json = JSON.parse(jsonString)
+      if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(json)
     })
     return results
   }
