@@ -1,6 +1,7 @@
 // more or less obsolete because of the strict usage policy of Nominatim
 const axios = require('axios')
 const fs = require('fs')
+const removeDiacritics = require('diacritics').remove;
 axios.defaults.headers.common['charset'] = 'iso-8859-1'
 axios.defaults.headers.common['User_Agent'] = 'Fridays for Future API v0.0.1'
 
@@ -15,20 +16,6 @@ const file2 = 'public/mapdata2.js'
 const file_textgen = 'public/mapdata_textgen.js'
 const file_groups = 'public/mapdata_groups.js'
 
-function deUmlaut (value) {
-  value = value.toLowerCase()
-  value = value.replace(/ä/g, 'ae')
-  value = value.replace(/ö/g, 'oe')
-  value = value.replace(/ü/g, 'ue')
-  value = value.replace(/ß/g, 'ss')
-  value = value.replace(/ /g, '-')
-  value = value.replace(/\./g, '')
-  value = value.replace(/,/g, '')
-  value = value.replace(/\(/g, '')
-  value = value.replace(/\)/g, '')
-  return value
-}
-
 function sleep (ms) {
   return new Promise(resolve => {
     setTimeout(resolve, ms)
@@ -38,7 +25,7 @@ function sleep (ms) {
 async function getCityCoords (city, time, place) {
   let coords = {}
   const friendlyName = city.slice().trim()
-  city = deUmlaut(city)
+  city = removeDiacritics(city)
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
@@ -68,7 +55,7 @@ async function getCityCoords (city, time, place) {
 async function getGroupCoords (groupName, groupLinks) {
   let coords = {}
   const friendlyName = groupName.slice().trim()
-  groupName = deUmlaut(groupName)
+  groupName = removeDiacritics(groupName)
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${groupName} de&email=karl@karl-beecken.de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
