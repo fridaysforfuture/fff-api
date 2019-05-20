@@ -202,13 +202,13 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
       val.groupLinks.forEach(links => {
         switch (links.type) {
           case 'whatsapp':
-            groupString += `<a href="${links.link}"><img src="images/whatsapp.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/whatsapp.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
             break
           case 'telegram':
-            groupString += `<a href="${links.link}"><img src="images/telegram.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/telegram.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
             break
           case 'email':
-            groupString += `<a href="${links.link}"><img src="images/email.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/email.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
             break
           default:
             groupString += `<br><a href="${links.link}">${links.type}</a>`
