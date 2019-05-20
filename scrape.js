@@ -101,7 +101,8 @@ module.exports = {
             '<!doctype html><body>' + value,
             'text/html')
           let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
-          const chatType = domLinks.window.document.body.querySelector('a').textContent === 'WhatsApp' ? 'whatsapp' : domLinks.window.document.body.querySelector('a').textContent === 'Telegram' ? 'telegram' : undefined
+          const text = domLinks.window.document.body.querySelector('a').textContent
+          const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : text
           chatLink = chatLink.replace(/\r?\n|\r/, '')
           if (chatType !== undefined) {
             linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
