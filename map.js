@@ -25,7 +25,7 @@ function sleep (ms) {
 async function getCityCoords (city, time, place) {
   let coords = {}
   const friendlyName = city.slice().trim()
-  city = removeDiacritics(city)
+  city = removeDiacritics(city).toLowerCase()
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
@@ -55,7 +55,7 @@ async function getCityCoords (city, time, place) {
 async function getGroupCoords (groupName, groupLinks) {
   let coords = {}
   const friendlyName = groupName.slice().trim()
-  groupName = removeDiacritics(groupName)
+  groupName = removeDiacritics(groupName).toLowerCase()
   await axios.get(`https://nominatim.openstreetmap.org/search/?q=${groupName} de&email=karl@karl-beecken.de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
