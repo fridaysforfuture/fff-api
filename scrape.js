@@ -1,6 +1,6 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
-const jsdom = require("jsdom")
+const jsdom = require('jsdom')
 const { JSDOM } = jsdom
 const util = require('util')
 let result
@@ -49,7 +49,11 @@ module.exports = {
     let results = []
     result.forEach(value => {
       let splitted = value.split(', ')
-      if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
+      if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({
+        city: splitted[0],
+        time: splitted[1],
+        place: splitted[2].trim()
+      })
     })
     return results
   },
@@ -65,7 +69,11 @@ module.exports = {
     let results = []
     result.forEach(value => {
       let splitted = value.split(', ')
-      if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
+      if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({
+        city: splitted[0],
+        time: splitted[1],
+        place: splitted[2].trim()
+      })
     })
     return results
   },
@@ -86,21 +94,23 @@ module.exports = {
         '<!doctype html><body>' + splitted[0],
         'text/html')
       const groupName = dom.window.document.body.textContent
-      let links = splitted[1].split(' | ')
-      links.forEach(value => {
-        const domLinks = new JSDOM(
-          '<!doctype html><body>' + value,
-          'text/html')
-        let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
-        const chatType = domLinks.window.document.body.querySelector('a').textContent === 'WhatsApp' ? 'whatsapp' : domLinks.window.document.body.querySelector('a').textContent === 'Telegram' ? 'telegram' : undefined
-        chatLink = chatLink.replace(/\r?\n|\r/, '')
-        if (chatType !== undefined) {
-          linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
-        }
-      })
-      const jsonString = `{ "groupName": "${groupName}", "groupLinks": ${JSON.stringify(linksArray)} }`
-      const json = JSON.parse(jsonString)
-      if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(json)
+      if (splitted[1]) {
+        let links = splitted[1].split(' | ')
+        links.forEach(value => {
+          const domLinks = new JSDOM(
+            '<!doctype html><body>' + value,
+            'text/html')
+          let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
+          const chatType = domLinks.window.document.body.querySelector('a').textContent === 'WhatsApp' ? 'whatsapp' : domLinks.window.document.body.querySelector('a').textContent === 'Telegram' ? 'telegram' : undefined
+          chatLink = chatLink.replace(/\r?\n|\r/, '')
+          if (chatType !== undefined) {
+            linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
+          }
+        })
+        const jsonString = `{ "groupName": "${groupName}", "groupLinks": ${JSON.stringify(linksArray)} }`
+        const json = JSON.parse(jsonString)
+        if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(json)
+      }
     })
     return results
   }
