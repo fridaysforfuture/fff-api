@@ -8,6 +8,11 @@ let result
 const url = 'https://fridaysforfuture.de/streiktermine/'
 const regioUrl = 'https://fridaysforfuture.de/regionalgruppen/'
 
+function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
 module.exports = {
   async crunchDate () {
     await axios.get(url)
@@ -102,7 +107,7 @@ module.exports = {
             'text/html')
           let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
           const text = domLinks.window.document.body.querySelector('a').textContent
-          const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : text
+          const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : validateEmail(text) ? 'email' : text
           chatLink = chatLink.replace(/\r?\n|\r/, '')
           if (chatType !== undefined) {
             linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
