@@ -95,7 +95,7 @@ async function getLocations () { // generates the Leaflet data from the first li
   let markers = ''
   locations.forEach(val => {
     if (val !== undefined) {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state  !== undefined ? val.state : ""}');
+      markers += `L.marker([${val.lat},${val.lon}], {icon: greenIcon}).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state  !== undefined ? val.state : ""}');
 `
     }
   })
@@ -129,7 +129,7 @@ async function getLocationsSecond () { // generates the Leaflet data from the se
   let markers = ''
   locations.forEach(val => {
     if (val !== undefined) {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state  !== undefined ? val.state : ""}');
+      markers += `L.marker([${val.lat},${val.lon}], {icon: greenIcon}).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state  !== undefined ? val.state : ""}');
 `
     }
   })
@@ -162,7 +162,7 @@ async function getLocationsTextgen () { // generates the Leaflet data from the f
   let markers = ''
   locations.forEach(val => {
     if (val !== undefined) {
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state  !== undefined ? val.state : ""}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" data-state="${val.state}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
+      markers += `L.marker([${val.lat},${val.lon}], {icon: greenIcon}).addTo(map).bindPopup('<b>${val.city}</b></br>${val.time}<br>${val.place}<br>${val.state  !== undefined ? val.state : ""}<br><button data-city="${val.city}" data-time="${val.time}" data-place="${val.place}" data-state="${val.state}" onclick="selectPlace(this);" class="btn btn-outline-primary">Ort w&auml;hlen</button>');
 `
     }
   })
@@ -216,7 +216,7 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
         }
       })
       groupString += '</div>'
-      markers += `L.marker([${val.lat},${val.lon}]).addTo(map).bindPopup('<b>${val.groupName}</b><br>${val.state}<br>${groupString}');
+      markers += `L.marker([${val.lat},${val.lon}], {icon: greenIcon}).addTo(map).bindPopup('<b>${val.groupName}</b><br>${val.state}<br>${groupString}');
 `
     }
   })
