@@ -1,7 +1,11 @@
 const express = require('express')
 const router = express.Router()
+const app = express()
+const cors = require('cors')
 const { crunchDate, crunchListAll, crunchList, crunchListSecond, crunchRegioList } = require('../scrape')
 const { getLocations, getLocationsSecond, getLocationsGroups } = require('../map')
+
+app.use(cors())
 
 router.get('/scrape/date', function(req, res, next) {
   crunchDate().then((date) => res.json({ date }))
