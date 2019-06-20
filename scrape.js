@@ -103,8 +103,7 @@ module.exports = {
     result.forEach(value => {
       let splitted = value.split(': ')
       let linksArray = []
-      const dom = new JSDOM(
-        '<!doctype html><body>' + splitted[0],
+      const dom = new JSDOM('<!doctype html><body>' + splitted[0],
         'text/html')
       const groupName = dom.window.document.body.textContent
       if (splitted[1]) {
