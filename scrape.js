@@ -114,7 +114,7 @@ module.exports = {
             '<!doctype html><body>' + value,
             'text/html')
           let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
-          const text = domLinks.window.document.body.querySelector('a').textContent
+          const text = removeHyphen(domLinks.window.document.body.querySelector('a').textContent)
           const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : validateEmail(text) ? 'email' : text
           chatLink = chatLink.replace(/\r?\n|\r/, '')
           if (chatType !== undefined) {
