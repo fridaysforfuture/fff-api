@@ -13,6 +13,10 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+function removeHyphen(str) {
+  return str.replace(/[\u00AD\u002D\u2011]+/g,'')
+}
+
 module.exports = {
   async crunchDate () {
     await axios.get(url)
@@ -38,7 +42,11 @@ module.exports = {
     let results = []
     result.forEach((value) => {
       let splitted = value.split(', ')
-      if (splitted[1] !== undefined) results.push({ city: splitted[0], time: splitted[1], place: splitted[2].trim() })
+      if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({
+        city: removeHyphen(splitted[0]),
+        time: splitted[1],
+        place: removeHyphen(splitted[2].trim())
+      })
     })
     return results
   },
@@ -55,9 +63,9 @@ module.exports = {
     result.forEach(value => {
       let splitted = value.split(', ')
       if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({
-        city: splitted[0],
+        city: removeHyphen(splitted[0]),
         time: splitted[1],
-        place: splitted[2].trim()
+        place: removeHyphen(splitted[2].trim())
       })
     })
     return results
@@ -75,9 +83,9 @@ module.exports = {
     result.forEach(value => {
       let splitted = value.split(', ')
       if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({
-        city: splitted[0],
+        city: removeHyphen(splitted[0]),
         time: splitted[1],
-        place: splitted[2].trim()
+        place: removeHyphen(splitted[2].trim())
       })
     })
     return results
@@ -113,7 +121,7 @@ module.exports = {
             linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
           }
         })
-        const jsonString = `{ "groupName": "${groupName}", "groupLinks": ${JSON.stringify(linksArray)} }`
+        const jsonString = `{ "groupName": "${removeHyphen(groupName)}", "groupLinks": ${JSON.stringify(linksArray)} }`
         const json = JSON.parse(jsonString)
         if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(json)
       }

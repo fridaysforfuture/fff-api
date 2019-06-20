@@ -3,7 +3,7 @@ const axios = require('axios')
 const fs = require('fs')
 const removeDiacritics = require('diacritics').remove;
 axios.defaults.headers.common['charset'] = 'iso-8859-1'
-axios.defaults.headers.common['User_Agent'] = 'Fridays for Future API v0.0.1'
+axios.defaults.headers.common['User-Agent'] = 'Fridays for Future API v0.0.2'
 
 const { crunchDate, crunchListAll, crunchList, crunchListSecond, crunchRegioList } = require('./scrape')
 
