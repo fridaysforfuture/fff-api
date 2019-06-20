@@ -26,7 +26,7 @@ async function getCityCoords (city, time, place) {
   let coords = {}
   const friendlyName = city.slice().trim()
   city = removeDiacritics(city).toLowerCase()
-  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city} de&format=json&addressdetails=1&email=karl@karl-beecken.de`)
+  await axios.get(`https://nominatim.openstreetmap.org/search/?q=${city}+germany&format=json&addressdetails=1&email=karl@karl-beecken.de`)
     .then(data => {
       if (data.data[0]) {
         let state
