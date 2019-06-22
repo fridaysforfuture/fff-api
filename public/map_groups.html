@@ -12,6 +12,7 @@
 		padding: 0;
 		margin: 0;
 	}
+
 	html, body, #map {
 		height: 100%;
 		width: 100%;
@@ -20,17 +21,17 @@
 <div id="map" class="box"></div>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-<link rel="stylesheet" href="stylesheets/leaflet-gesture-handling.min.css" type="text/css">
+<link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
 <script src="//unpkg.com/leaflet-gesture-handling"></script>
 <script>
   var map = L.map('map', {
     center: [51.163361, 10.447683],
     zoom: 5,
     gestureHandling: true
-  });
+  })
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
+  }).addTo(map)
   var greenIcon = new L.Icon({
     iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -38,7 +39,7 @@
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
-  });
+  })
 </script>
 <script src="https://fff-api.dmho.de/mapdata_groups.js"></script>
 

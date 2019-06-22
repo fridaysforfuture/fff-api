@@ -1,16 +1,17 @@
-		<html lang="en">
-		<head>
-			<meta charset="UTF-8">
-			<title>Fridays For Future | Karte</title>
-			<meta content="width=device-width, initial-scale=1.0" name="viewport">
-			<link href="images/favicon.webp" rel="shortcut icon">
-		</head>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Fridays For Future | Karte</title>
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<link href="images/favicon.webp" rel="shortcut icon">
+</head>
 <body>
 <style>
 	body {
 		padding: 0;
 		margin: 0;
 	}
+
 	html, body, #map {
 		height: 100%;
 		width: 100%;
@@ -20,17 +21,18 @@
 <link href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" rel="stylesheet">
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-<link href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" rel="stylesheet" type="text/css">
+<link href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" rel="stylesheet"
+      type="text/css">
 <script src="//unpkg.com/leaflet-gesture-handling"></script>
 <script>
   var map = L.map('map', {
     center: [51.163361, 10.447683],
     zoom: 5,
     gestureHandling: true
-  });
+  })
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
+  }).addTo(map)
   var greenIcon = new L.Icon({
     iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -38,7 +40,7 @@
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
-  });
+  })
 </script>
 <script src="https://fff-api.dmho.de/mapdata2.js"></script>
 
