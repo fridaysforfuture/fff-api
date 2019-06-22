@@ -114,7 +114,7 @@ module.exports = {
             'text/html')
           let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
           const text = removeHyphen(domLinks.window.document.body.querySelector('a').textContent)
-          const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : validateEmail(text) ? 'email' : text
+          const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : validateEmail(removeHyphen(text)) ? 'email' : text
           chatLink = chatLink.replace(/\r?\n|\r/, '')
           if (chatType !== undefined) {
             linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
