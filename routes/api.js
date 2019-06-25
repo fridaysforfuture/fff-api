@@ -36,7 +36,9 @@ router.get('/scrape/list2/map', function(req, res, next) {
 })
 
 router.get('/scrape/groups', function(req, res, next) {
-  crunchRegioList().then((list) => res.json({ generated: Date.now(), count: list.length, list }))
+  res.status(403)
+  res.json({ forbidden: true })
+  // crunchRegioList().then((list) => res.json({ generated: Date.now(), count: list.length, list }))
 })
 
 router.get('/scrape/groups/map', function(req, res, next) {
