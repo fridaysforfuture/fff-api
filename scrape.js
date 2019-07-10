@@ -14,7 +14,7 @@ function validateEmail(email) {
 }
 
 function removeHyphen(str) {
-  return str.replace(/[\u00AD\u002D\u2011]+/g,'')
+  return str.replace(/\u00AD/g,'');
 }
 
 module.exports = {
@@ -36,7 +36,7 @@ module.exports = {
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)
-          result = $('.wp-block-table > tbody > tr > td').map(function (i, el) {return $(this).text()}).get()
+          result = $('.wp-block-table > tbody > tr > td').map(function (i, el) {return $(this).text().replace(/\u00A0/g, ' ')}).get()
         }
       }, (err) => console.log(err))
     let results = []
@@ -56,18 +56,23 @@ module.exports = {
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)
-          result = $('.wp-block-table').eq(0).children().children().map(function (i, el) {return $(this).text()}).get()
+          result = $('.wp-block-table').eq(0).children().children().map(function (i, el) {return $(this).text().replace(/\u00A0/g, ' ')}).get()
         }
       }, (err) => console.log(err))
     let results = []
     result.forEach(value => {
-      let splitted = value.split(', ')
-      if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) results.push({
-        city: removeHyphen(splitted[0]),
-        time: splitted[1],
-        place: removeHyphen(splitted[2].trim())
-      })
+      let toSplit = value.toString()
+      let splitted = toSplit.split(', ')
+      console.log(splitted)
+      if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) {
+        results.push({
+          city: removeHyphen(splitted[0]),
+          time: splitted[1],
+          place: removeHyphen(splitted[2].trim())
+        })
+      }
     })
+    console.log(results)
     return results
   },
   async crunchListSecond () {
@@ -76,7 +81,7 @@ module.exports = {
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)
-          result = $('.wp-block-table').eq(1).children().children().map(function (i, el) {return $(this).text()}).get()
+          result = $('.wp-block-table').eq(1).children().children().map(function (i, el) {return $(this).text()}.replace(/\u00A0/g, ' ')).get()
         }
       }, err => console.log(err))
     let results = []
