@@ -63,7 +63,6 @@ module.exports = {
     result.forEach(value => {
       let toSplit = value.toString()
       let splitted = toSplit.split(', ')
-      console.log(splitted)
       if (splitted[2] !== undefined && splitted[1] !== undefined && splitted[0] !== undefined && splitted && value) {
         results.push({
           city: removeHyphen(splitted[0]),
@@ -72,7 +71,6 @@ module.exports = {
         })
       }
     })
-    console.log(results)
     return results
   },
   async crunchListSecond () {
