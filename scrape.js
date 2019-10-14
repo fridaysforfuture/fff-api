@@ -111,16 +111,19 @@ module.exports = {
       const groupName = dom.window.document.body.textContent
       if (splitted[1]) {
         let links = splitted[1].split(' | ')
+        console.log(links)
         links.forEach(value => {
           const domLinks = new JSDOM(
             '<!doctype html><body>' + value,
             'text/html')
-          let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
-          const text = removeHyphen(domLinks.window.document.body.querySelector('a').textContent)
-          const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : validateEmail(removeHyphen(text)) ? 'email' : text
-          chatLink = chatLink.replace(/\r?\n|\r/, '')
-          if (chatType !== undefined) {
-            linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
+          if (domLinks.window.document.body.querySelector('a') !== null) {
+            let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
+            const text = removeHyphen(domLinks.window.document.body.querySelector('a').textContent)
+            const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : validateEmail(removeHyphen(text)) ? 'email' : text
+            chatLink = chatLink.replace(/\r?\n|\r/, '')
+            if (chatType !== undefined) {
+              linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
+            }
           }
         })
         const jsonString = `{ "groupName": "${removeHyphen(groupName)}", "groupLinks": ${JSON.stringify(linksArray)} }`
