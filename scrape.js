@@ -111,7 +111,6 @@ module.exports = {
       const groupName = dom.window.document.body.textContent
       if (splitted[1]) {
         let links = splitted[1].split(' | ')
-        console.log(links)
         links.forEach(value => {
           const domLinks = new JSDOM(
             '<!doctype html><body>' + value,
