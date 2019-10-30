@@ -210,6 +210,18 @@ async function getLocationsGroups () { // generates the Leaflet data from the se
           case 'email':
             groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/email.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
             break
+          case 'twitter':
+            groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/twitter.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            break
+          case 'website':
+            groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/website.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            break
+          case 'instagram':
+            groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/instagram.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            break
+          case 'facebook':
+            groupString += `<a href="${links.link}"><img src="https://fff-api.dmho.de/images/facebook.png" style="width: 30px; height: 30px; padding: 5px" /></a>`
+            break
           default:
             groupString += `<br><a href="${links.link}">${links.type}</a>`
             break

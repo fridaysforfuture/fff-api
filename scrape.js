@@ -118,7 +118,33 @@ module.exports = {
           if (domLinks.window.document.body.querySelector('a') !== null) {
             let chatLink = domLinks.window.document.body.querySelector('a').getAttribute('href')
             const text = removeHyphen(domLinks.window.document.body.querySelector('a').textContent)
-            const chatType = text === 'WhatsApp' ? 'whatsapp' : text === 'Telegram' ? 'telegram' : validateEmail(removeHyphen(text)) ? 'email' : text
+            let chatType
+            switch (true) {
+              case text === 'WhatsApp':
+                chatType = 'whatsapp'
+                break
+              case text === 'Telegram':
+                chatType = 'telegram'
+                break
+              case validateEmail(removeHyphen(text)):
+                chatType = 'email'
+                break
+              case text === 'Twitter':
+                chatType = 'twitter'
+                break
+              case text === 'Website':
+                chatType = 'website'
+                break
+              case text === 'Facebook':
+                chatType = 'facebook'
+                break
+              case text === 'Instagram':
+                chatType = 'instagram'
+                break
+              default:
+                chatType = text
+                break
+            }
             chatLink = chatLink.replace(/\r?\n|\r/, '')
             if (chatType !== undefined) {
               linksArray.push(JSON.parse(`{ "type": "${chatType}", "link": "${chatLink}" }`))
