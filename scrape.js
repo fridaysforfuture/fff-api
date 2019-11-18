@@ -104,13 +104,14 @@ module.exports = {
       }, err => console.log(err))
     let results = []
     result.forEach(value => {
-      let splitted = value.split(': ')
+      let split = value.split(': ')
+      console.log(value)
       let linksArray = []
-      const dom = new JSDOM('<!doctype html><body>' + splitted[0],
+      const dom = new JSDOM('<!doctype html><body>' + split[0],
         'text/html')
       const groupName = dom.window.document.body.textContent
-      if (splitted[1]) {
-        let links = splitted[1].split(' | ')
+      if (split[1]) {
+        let links = split[1].split(' | ')
         links.forEach(value => {
           const domLinks = new JSDOM(
             '<!doctype html><body>' + value,
@@ -153,7 +154,7 @@ module.exports = {
         })
         const jsonString = `{ "groupName": "${removeHyphen(groupName)}", "groupLinks": ${JSON.stringify(linksArray)} }`
         const json = JSON.parse(jsonString)
-        if (splitted[0] !== undefined && splitted[0] !== 'Deutschland' && splitted[0] !== 'Diskussionen') results.push(json)
+        if (split[0] !== undefined && split[0] !== 'Deutschland' && split[0] !== 'Diskussionen') results.push(json)
       }
     })
     return results

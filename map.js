@@ -30,10 +30,10 @@ async function getCityCoords (city, time, place) {
     .then(data => {
       if (data.data[0]) {
         let state
-        if (city !== 'berlin' && city !== 'bremen' && city !== 'hamburg') {
-          state = data.data[0].address.state
-        } else {
+        if (city === 'berlin' && city === 'bremen' && city === 'hamburg') {
           state = friendlyName
+        } else {
+          state = data.data[0].address.state
         }
         coords = {
           city: friendlyName,
@@ -60,10 +60,10 @@ async function getGroupCoords (groupName, groupLinks) {
     .then(data => {
       if (data.data[0]) {
         let state
-        if (groupName !== 'berlin' && groupName !== 'bremen' && groupName !== 'hamburg') {
-          state = data.data[0].address.state
-        } else {
+        if (groupName === 'berlin' && groupName === 'bremen' && groupName === 'hamburg') {
           state = friendlyName
+        } else {
+          state = data.data[0].address.state
         }
         coords = {
           groupName: friendlyName,
